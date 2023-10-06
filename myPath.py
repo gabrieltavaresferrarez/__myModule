@@ -36,16 +36,30 @@ class Path:
         self.__listPath = self.__listPath[1:] if self.__listPath[0] == '' else self.__listPath
 
         
+    """Return if the file or folder exists
 
-    def exists(self):
+    Returns:
+        bool :  True if exists
+    """
+    def exists(self) -> bool:
         return os.path.exists(self.path)
 
+    """Return if item is a directory
+
+    Returns:
+        bool :  True if is directory
+    """
     def is_dir(self):
         if self.exists():
             return os.path.isdir(self.path)
         else:
             raise ValueError('Caminho não existe')
 
+    """Return if item is a file
+
+    Returns:
+        bool :  True if is file
+    """
     def is_file(self):
         if self.exists():
             return os.path.isfile(self.path)
@@ -108,14 +122,31 @@ class Path:
             return Path(self.path + self.__string_pathSeparator + valor)
 
 
+    """Create a directory if item doesn't exists
 
+    Returns:
+        bool :  True if create directory | False if path already exists
+    """
     def make_dir(self):
         if self.exists():
             return False #arquivo já existe
         os.makedirs(self.path)
         return True
 
-    def list_dir(self, filter:str = None):
+    """List all itens in Path
+
+    Arguments:
+        filter : str -> is unix filter like to define wich itens should be listed
+
+    Returns:
+        list :  Return a list of all ites in that directory
+
+    Example:
+        path.list_dir(filter='*.png')
+        path.list_dir(filter='teste.*')
+        path.list_dir(filter='teste.png')
+    """
+    def list_dir(self, filter:str = None) -> list:
         if self.is_dir():
             listStr_paths =  os.listdir(self.path)
         else:
@@ -134,7 +165,11 @@ class Path:
             listStr_paths = [path for path in listStr_paths if re.search(padrao, path)]
         return listStr_paths
 
+    """Create a empty file in the path
 
+    Returns:
+        bool :  True if create file | False if file already exists
+    """
     def make_file(self):
         if self.exists():
             return False #arquivo já existe
@@ -144,6 +179,11 @@ class Path:
         open(self.path, 'w').close()
         return True
     
+    """Delete path
+
+    Returns:
+        bool :  True if deleted
+    """
     def delete(self):
         if self.is_file():
             os.remove(self.path)
