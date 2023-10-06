@@ -2,6 +2,8 @@ import platform
 import os
 import re
 
+# TODO - COPY FILES
+
 class Path:
     def __init__(self, path=None):
         self.__system = platform.system()
