@@ -1,6 +1,7 @@
 import platform
 import os
 import re
+import shutil
 
 # TODO - COPY FILES
 
@@ -194,6 +195,41 @@ class Path:
         else:
             raise ValueError('Caminho não existe')
     
+    '''Copy the current item to a specific target_directory
+
+Arguments
+    target_dir : str ou Path specifying the directory wich the copy must be
+
+Returns
+    bool : True if copy was successfully
+
+    '''
+    def copy(self, target_dir):
+        # check type of input
+        if type(target_dir) == Path:
+            path_targetDir = target_dir
+        elif type(target_dir) == str:
+            path_targetDir = Path(target_dir)
+        else:
+            raise TypeError(f'target_dir must be of type <Path> or <str> but {type(target_dir)} is given')
+
+        # check if target dir is valid
+        if not(path_targetDir.exists()):
+            raise ValueError(f'Target directory dont exists')
+        if  path_targetDir.is_file():
+            raise ValueError(f'Target directory is a file, not a directory')
+
+        if self.is_dir():
+            str_folderName = self[-1]
+            path_copyDir =  path_targetDir + str_folderName
+            path_copyDir.make_dir()
+            shutil.copytree(self.path, path_copyDir.path,  dirs_exist_ok=True)
+            return True
+        elif self.is_file():
+            shutil.copy2(self.path, path_targetDir.path)
+            return True
+    
+
 if __name__ == '__main__':
     path = Path('bola/bola2/') 
 
